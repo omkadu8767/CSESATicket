@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Web Development Workshop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Circle burst animation */
+        .circle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: hsl(calc(360 * var(--color)), 80%, 60%);
+            border-radius: 50%;
+            animation: expandFade 2s ease-out forwards;
+        }
+
+        @keyframes expandFade {
+            0% {
+                transform: scale(0.5);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+
+        /* Text animation: bounce in and scale up */
+        #welcomeMessage {
+            display: none;
+            opacity: 0;
+            transform: scale(0.5);
+            animation: bounceIn 1s forwards;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(1.2);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Styling adjustments */
+        body {
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body
+    class="flex flex-col items-center justify-center h-screen bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-400">
+    <div class="text-center">
+        <h1 class="text-4xl font-bold text-white mb-6">Enter Your CSESA ID</h1>
+
+        <!-- Enter ID -->
+        <input type="text" id="idInput" placeholder="Your CSESA ID" class="border rounded-lg p-2 mb-4">
+        <button onclick="findParticipantById()"
+            class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Submit</button>
+    </div>
+
+    <!-- Welcome Message Section -->
+    <div id="welcomeMessage" class="text-3xl font-bold text-white text-center mt-4"></div>
+
+    <!-- Circle Burst Animation Container -->
+    <div id="circleContainer"></div>
+
+    <footer class="absolute  bottom-0 left-1/2 transform -translate-x-1/2 mb-4 text-white text-base text-center">
+        &copy;  <a href="https://www.linkedin.com/in/om-kadu-53305425a/" target="_blank">Developed By OK</a>
+    </footer>
+
+
+    <script>
+        // Hardcoded JSON data inside the JavaScript code
+        const participantsData = {
+            "#CSESA2401": { "name": "Anuja Garmode" },
+            "#CSESA2402": { "name": "Anushka Gawande" },
+            "#CSESA2403": { "name": "Apurva Prashant Jagtap" },
+            "#CSESA2404": { "name": "Ashlesha Ramesh Sultane" },
+            "#CSESA2405": { "name": "Dhanashri Santosh Jain" },
+            "#CSESA2406": { "name": "Divya Joshi" },
+            "#CSESA2407": { "name": "Dolly Bhutada" },
+            "#CSESA2408": { "name": "Ganesh Kashinath Tupkar" },
+            "#CSESA2409": { "name": "Gargi Mane" },
+            "#CSESA2410": { "name": "Gouri Deshmukh" },
+            "#CSESA2411": { "name": "Gunjan Sunil Gandhi" },
+            "#CSESA2412": { "name": "JAY BHARAT WANKHADE" },
+            "#CSESA2413": { "name": "Kanchan Nilkanth Chavan" },
+            "#CSESA2414": { "name": "Karan shirsat" },
+            "#CSESA2415": { "name": "Krushna Suresh Falke" },
+            "#CSESA2416": { "name": "Kshitija Tarkase" },
+            "#CSESA2417": { "name": "Mandar Mukesh Dhamodkar" },
+            "#CSESA2418": { "name": "Mayuresh Subhash Guhe" },
+            "#CSESA2419": { "name": "Mendhe Bhimesh Sanjay" },
+            "#CSESA2420": { "name": "Nandan Dilip kulat" },
+            "#CSESA2421": { "name": "Om Shamrao Nimbalkar" },
+            "#CSESA2422": { "name": "Pavan Sheshrao Gaikwad" },
+            "#CSESA2423": { "name": "Piyush Kashinath Dawange" },
+            "#CSESA2424": { "name": "Pooja Rajesh Petkar" },
+            "#CSESA2425": { "name": "Poonam Rajkumar Pise" },
+            "#CSESA2426": { "name": "Pournima sanjay tayade" },
+            "#CSESA2427": { "name": "prachi matlane" },
+            "#CSESA2428": { "name": "Pragati Ravindra Pohekar" },
+            "#CSESA2429": { "name": "Rahul paghrut" },
+            "#CSESA2430": { "name": "Riddhi Nandkishor Ambere" },
+            "#CSESA2431": { "name": "Rushikesh Bhawarkar" },
+            "#CSESA2432": { "name": "Sakshi Devendra Bahurupe" },
+            "#CSESA2433": { "name": "Samiksha Dhawali" },
+            "#CSESA2434": { "name": "Sanchita Gawande" },
+            "#CSESA2435": { "name": "Sanskruti Satalkar" },
+            "#CSESA2436": { "name": "Sarvesh Werulkar" },
+            "#CSESA2437": { "name": "Shantanu Vinod Pawade" },
+            "#CSESA2438": { "name": "Shreya Deshmukh" },
+            "#CSESA2439": { "name": "Shrishti Rajendra Ingale" },
+            "#CSESA2440": { "name": "Shruti Bhute" },
+            "#CSESA2441": { "name": "Shruti Manekar" },
+            "#CSESA2442": { "name": "Shubh Prashant Chandore" },
+            "#CSESA2443": { "name": "Shubham Purushottam Tandale" },
+            "#CSESA2444": { "name": "Sneha Amle" },
+            "#CSESA2445": { "name": "Soham M. Patil" },
+            "#CSESA2446": { "name": "Srushti Shriram Deshmukh" },
+            "#CSESA2447": { "name": "Sujal Milind Agame" },
+            "#CSESA2448": { "name": "Sumit Subodh Hinge" },
+            "#CSESA2449": { "name": "Tanisha Bhagwati Ozha" },
+            "#CSESA2450": { "name": "Tushar Shankar Patole" }
+        };
+
+        function findParticipantById() {
+            const idInput = document.getElementById('idInput').value;
+            const participant = participantsData[idInput];
+
+            if (participant) {
+                // Trigger the circle burst animation
+                triggerCircleBurst();
+
+                // Display the welcome message after a short delay
+                setTimeout(() => {
+                    const message = `Welcome, ${participant.name}!. Hope you got your ticket. Don't forget to post it on your social media handles and tag @csesa_ssgmce2024 🎉`;
+                    document.getElementById('welcomeMessage').innerText = message;
+                    document.getElementById('welcomeMessage').style.display = 'block';
+                    document.getElementById('welcomeMessage').style.animation = 'bounceIn 1s forwards';
+                }, 1000);
+            } else {
+                alert("ID not found. Please enter a valid CSESA ID.");
+            }
+        }
+
+        function triggerCircleBurst() {
+            const circleContainer = document.getElementById('circleContainer');
+            for (let i = 0; i < 50; i++) {
+                const circle = document.createElement('div');
+                circle.className = 'circle';
+                circle.style.left = Math.random() * window.innerWidth + 'px';
+                circle.style.top = Math.random() * window.innerHeight + 'px';
+                circle.style.setProperty('--color', Math.random()); // Random circle color
+                circleContainer.appendChild(circle);
+
+                // Remove the circle after the animation
+                setTimeout(() => {
+                    circle.remove();
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+
+</html>
